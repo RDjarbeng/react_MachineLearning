@@ -7,15 +7,17 @@ export default function Toxicity() {
   const [model, setModel] = useState();
   const [text, setText] = useState('Testing');
 
-  const loadModel = async () => {
+  const userInput = [
+    'If you come near me You are so dead, do not fool with me you, I will beat you up and take you to an early grave. You will regret it, fool.',
+  ];
+
+  const [input, setInput] = useState(userInput);
+  const loadModel = async (userInput) => {
     console.log('Model loading...');
 
     const threshold = 0.5;
     const toxicityModel = await toxicity.load(threshold);
     setModel(toxicityModel);
-    const userInput = [
-      'If you come near me You are so dead, do not fool with me you, I will beat you up and take you to an early grave. You will regret it, fool.',
-    ];
 
     // console.log(
     //   'Model loaded',
@@ -58,12 +60,12 @@ export default function Toxicity() {
   };
 
   useEffect(() => {
-    loadModel();
+    loadModel(input);
   }, []);
 
   return (
     <div>
-      <h1>Loading toxicity!</h1>
+      <span>{userInput || 'Loading toxicity!'}</span>
       <p>{text}</p>
     </div>
   );

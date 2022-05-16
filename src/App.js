@@ -6,7 +6,7 @@ import Toxicity from './toxicity';
 export default function App() {
   return (
     <>
-      <h2>Try ML</h2>
+      <h2>Try ML toxicity</h2>
       <Toxicity />
     </>
   );
