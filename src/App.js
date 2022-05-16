@@ -7,6 +7,7 @@ import Toxicity from './Toxicity';
 export default function App() {
   return (
     <>
+      <h2>Try ML</h2>
       <Toxicity />
     </>
   );
