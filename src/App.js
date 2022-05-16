@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './style.css';
-import * as toxicity from '@tensorflow-models/toxicity';
-import '@tensorflow/tfjs';
-import Toxicity from './Toxicity';
+
+import Toxicity from './toxicity';
 
 export default function App() {
   return (
