@@ -2,8 +2,6 @@ import React from 'react';
 import './style.css';
 import VideoML from './videoML';
 
-import Toxicity from './toxicity';
-
 export default function App() {
   return (
     <>
