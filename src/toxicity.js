@@ -3,22 +3,21 @@ import React, { useEffect, useState } from 'react';
 import * as toxicity from '@tensorflow-models/toxicity';
 // import '@tensorflow/tfjs';
 
+const threshold = 0.5;
 export default function Toxicity() {
   const [model, setModel] = useState();
-  const [text, setText] = useState('Testing');
-  const [value, setValue] = useState('Input toxic values ');
+  const [text, setText] = useState('Loading model');
+  const [value, setValue] = useState('Input toxic values here ');
 
-  const userInput = [
-    'If you come near me You are so dead, do not fool with me you, I will beat you up and take you to an early grave. You will regret it, fool.',
-  ];
+  const userInput = [' foolish guy.'];
 
   const [input, setInput] = useState(userInput);
   const loadModel = async (userInput) => {
     console.log('Model loading...');
 
-    const threshold = 0.5;
     const toxicityModel = await toxicity.load(threshold);
     setModel(toxicityModel);
+    if (toxicityModel) setText('Ready to predict');
 
     // console.log(
     //   'Model loaded',
@@ -29,6 +28,7 @@ export default function Toxicity() {
     // );
     console.log('model loaded');
     try {
+      setText('predicting...');
       toxicityModel
         .classify(userInput)
         .then((predictions) => {
@@ -61,9 +61,12 @@ export default function Toxicity() {
   };
 
   const testInput = async (userInput) => {
-    const threshold = 0.5;
-    const toxicityModel = await toxicity.load(threshold);
-    setModel(toxicityModel);
+    setText('predicting...');
+
+    if (!model) {
+      const toxicityModel = await toxicity.load(threshold);
+      if (toxicityModel) setModel(toxicityModel);
+    }
 
     // console.log(
     //   'Model loaded',
@@ -74,7 +77,8 @@ export default function Toxicity() {
     // );
     console.log('model loaded');
     try {
-      toxicityModel
+      setInput(userInput);
+      model
         .classify(userInput)
         .then((predictions) => {
           console.log('running', predictions);
@@ -97,11 +101,13 @@ export default function Toxicity() {
               //  returns 'insult'.
             }
           });
-          setText(t);
+          if (t) setText(t);
+          else setText('No prediction, no toxicity');
         })
         .catch((err) => console.log('err & toxicity', err));
     } catch (err) {
       console.log('err in toxicity', err);
+      console.error(err);
     }
   };
 
@@ -110,7 +116,7 @@ export default function Toxicity() {
   }, []);
   const handleChange = (event) => {
     setValue(event.target.value);
-    model.classify();
+    testInput(value);
   };
   return (
     <div>
@@ -121,7 +127,7 @@ export default function Toxicity() {
           onChange={handleChange}
         />
       </div>
-      <span>{userInput || 'Loading toxicity!'}</span>
+      <span>{input || 'Loading toxicity!'}</span>
       <p>{text}</p>
     </div>
   );
